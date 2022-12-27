@@ -11,3 +11,42 @@ El objetivo del proyecto Delilah Restó es emular la tarea de un desarrollador b
 - Archivo SQL o instalación desde la aplicación
 - Archivo de documentación
 - README.md con instrucciones de instalación
+
+
+## Get started
+
+### Specifications
+
+The specification for this API is in [Open API Docs](/spec.yaml).
+
+You can see [Postman samples](https://documenter.getpostman.com/view/11310918/UzJFvdtB) as well.
+
+### 1.- Clone the repository
+
+```
+$ git clone https://github.com/DaveSV100/delilah-resto.git
+```
+
+or you can also download it as a zip file.
+
+### 2.- Install the dependencies
+
+Use the following command
+
+```
+npm install
+```
+
+### 3.- Configure the Database
+
+- Run a MYSQL server.
+
+- Import the [queries folder](database/db-queries) into your graphic client like MySQL Workbench or Similar.
+
+### 4.- Run the Server
+
+Go to the [server folder](/server/) and run the following command:
+```
+node index.js
+```
+### 5.- Now it's ready to use 
