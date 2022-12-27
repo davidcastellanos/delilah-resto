@@ -55,3 +55,18 @@ router.post("/dishes", checkAdmin, async (req, res) => {
         console.error(error);
     }
 })
+
+router.put("/dishes", verifyDish, checkAdmin, async (req, res) => {
+    //Update product Only can be done by admins
+    try {
+        const { description, image, price } = req.body;
+        const dishID = await getDish(req.body.description);
+        const updateDish = await sequelize.query(
+            "UPDATE dishes SET description = :description, image = :image, price = :price WHERE id = :id",
+            { replacements: {description, image, price, id: dishID} }
+        )
+        res.status(200).json("Dish updated");
+    } catch(error) {
+        console.error(error);
+    }
+})
