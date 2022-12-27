@@ -70,3 +70,23 @@ router.put("/dishes", verifyDish, checkAdmin, async (req, res) => {
         console.error(error);
     }
 })
+
+router.delete("/dishes/:id", checkAdmin, async(req, res) => {
+    //Delete product by ID
+    try {
+        const dishID = req.params.id
+        const deleteDish = await sequelize.query(
+            "DELETE FROM dishes WHERE id = :id",
+            { replacements: {id: dishID} }
+        )
+        if(deleteDish[0].affectedRows == 0) {
+            res.status(404).json("Dish not found")
+        } else {
+            res.status(200).json("Dish removed")
+        }
+        res.status(200).json();
+    } catch(error) {
+        console.error(error);
+    }
+})
+module.exports = router;
