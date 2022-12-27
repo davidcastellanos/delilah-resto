@@ -24,7 +24,7 @@ You can see [Postman samples](https://documenter.getpostman.com/view/11310918/Uz
 ### 1.- Clone the repository
 
 ```
-$ git clone https://github.com/DaveSV100/delilah-resto.git
+$ git clone https://github.com/davidcastellanos/delilah-resto.git
 ```
 
 or you can also download it as a zip file.
@@ -50,3 +50,42 @@ Go to the [server folder](/server/) and run the following command:
 node index.js
 ```
 ### 5.- Now it's ready to use 
+
+
+## Empezar
+
+### Especificaciones
+
+La especificación de esta API se encuentra en [Open API Docs](/spec.yaml).
+
+También puede ver [muestras de Postman] (https://documenter.getpostman.com/view/11310918/UzJFvdtB).
+
+### 1.- Clonar el repositorio
+
+```
+$ clon de git https://github.com/davidcastellanos/delilah-resto.git
+```
+
+o también puede descargarlo como un archivo zip.
+
+### 2.- Instala las dependencias
+
+Usa el siguiente comando
+
+```
+instalar npm
+```
+
+### 3.- Configurar la Base de Datos
+
+- Ejecutar un servidor MYSQL.
+
+- Importe la [carpeta de consultas] (database/db-queries) en su cliente gráfico como MySQL Workbench o similar.
+
+### 4.- Ejecutar el Servidor
+
+Vaya a la [carpeta del servidor](/server/) y ejecute el siguiente comando:
+```
+nodo index.js
+```
+### 5.- Ahora está listo para usar
