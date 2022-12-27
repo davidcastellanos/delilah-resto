@@ -20,3 +20,19 @@ USE `delilah_resto`;
 --
 -- Table structure for table `Dishes`
 --
+
+DROP TABLE IF EXISTS `Dishes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Dishes` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `Price` int NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Dishes`
+--
