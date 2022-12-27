@@ -17,3 +17,33 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
+
+
+
+//Routes
+app.use("/", userRoute);  
+app.use("/", dishes);
+app.use("/", orders);
+
+//Check token
+//algorithms: ["RS256"]
+app.use(expressJwt({ secret: jwtKey, algorithms: ["HS256"] }).unless({ path: [ "/" ] }));
+//Port listener
+app.listen(SERVER_PORT, () => {
+  console.log(`Server started on port ${SERVER_PORT}`);
+});
+
+//Home endpoint
+app.get("/", (req, res) => {
+  res.status(200).send("Bienvenido a Delilah Resto");
+});
+
+//Global middleware
+app.use((req, res, next) => {
+  useResponse = {
+    error: true,
+    code: 404,
+    message: "Url not found",
+  };
+  res.status(404).send(useResponse);
+});
