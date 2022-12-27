@@ -20,3 +20,23 @@ USE `delilah_resto`;
 --
 -- Table structure for table `Orders`
 --
+
+DROP TABLE IF EXISTS `Orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Orders` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Date` datetime NOT NULL,
+  `Dish_id` int NOT NULL,
+  `User_id` int NOT NULL,
+  `Payment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK=>Orders.User.id-Users.ID` (`User_id`),
+  CONSTRAINT `FK=>Orders.User.id-Users.ID` FOREIGN KEY (`User_id`) REFERENCES `Users` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Orders`
+--
