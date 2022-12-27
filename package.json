@@ -1,0 +1,41 @@
+{
+    "name": "delilah-resto",
+    "version": "1.0.0",
+    "description": "Acámica Backend project, career project number 3. Delilah Resto.",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Yojan David Castellanos Peña",
+    "license": "ISC",
+    "dependencies": {
+      "body-parser": "^1.19.0",
+      "compression": "^1.7.4",
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.0",
+      "express": "^4.17.3",
+      "express-jwt": "^6.1.1",
+      "helmet": "^5.0.2",
+      "jsonwebtoken": "^8.5.1",
+      "mysql2": "^2.3.3",
+      "sequelize": "^6.20.0"
+    },
+    "directories": {
+      "test": "test"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/davidcastellanos/delilah-resto.git"
+    },
+    "keywords": [
+      "Delilah"
+    ],
+    "bugs": {
+      "url": "https://github.com/davidcastellanos/delilah-resto/issues"
+    },
+    "homepage": "https://github.com/davidcastellanos/delilah-resto#readme",
+    "devDependencies": {
+      "nodemon": "^2.0.18"
+    }
+  }
+  
