@@ -37,3 +37,21 @@ router.get("/dishes", async (req, res) => {
             res.status(400);
         }
 })
+
+router.post("/dishes", checkAdmin, async (req, res) => {
+    //Create a new product. Only admins allowed
+    const { description, image, price } = req.body;
+    try {
+        if (description && image && price) {
+            const newProduct = await sequelize.query(
+                "INSERT INTO dishes (Description, Image, Price) VALUES (:description, :image, :price)",
+                { replacements: { description, image, price } }
+            )
+            res.status(200).json("New dish added correctly");
+        } else {
+            res.status(400).json("You need to insert all the data required");
+        }
+    } catch(error) {
+        console.error(error);
+    }
+})
