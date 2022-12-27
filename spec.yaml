@@ -1,0 +1,725 @@
+swagger: '2.0'
+info:
+  description: Restaurant API.
+  version: 1.0.0
+  title: Delilah Resto
+  contact:
+    email: castellanos.johann@gmail.com
+    url: https://github.com/davidcastellanos/delilah-resto.git
+tags:
+  - name: home
+    description: Homepage
+  - name: users
+    description: Users of Delilah Resto
+  - name: dishes
+    description: Dishes from our restaurant
+  - name: orders
+    description: Orders taken
+paths:
+  /:
+    get:
+        tags:
+        - home
+        summary: Welcome to Delilah Resto
+        description: Welcome the clients
+        produces:
+        - application/json
+        responses: 
+          200:
+            description: successful operation
+            schema: 
+              items:
+                $ref: '#/definitions/welcome_user'
+          404:
+            description: Url not found
+  /users:
+    get:
+        tags:
+        - users
+        summary: List of users
+        description: Returns all the users (only admins have access)
+        produces:
+        - application/json
+        responses:
+          200:
+            description: successful operation
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/user'
+          400:
+            description: Bad request
+          403: 
+            description: Forbidden
+        security:
+        - bearerAuth:
+          $ref: '#/securityDefinitions/bearerAuth' 
+        - adminAuth:
+          $ref: '#/securityDefinitions/adminAuth'
+  /users/{id}:
+    get:
+      tags:
+      - users
+      summary: Gets a user by id
+      description: It returns the data of a user by the id provided in the parameters. Only for admis
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: ID of user
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/user'
+        400:
+          description: Invalid ID supplied
+        403:
+          description: Forbidden
+        404:
+          description: User not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'    
+  /users/signup:
+    post:
+      tags:
+      - Users
+      summary: Create a new account
+      parameters:
+      - name: New_data
+        in: body
+        description: New data to sign up
+        required: true
+        schema:
+          $ref: '#/definitions/new_user'
+      responses:
+        200:
+            description: successful operation
+            schema:
+              $ref: '#definitions/ok'
+        400:
+          description: Incomplete form
+  /users/login:
+    post:
+      tags:
+      - users
+      summary: Logs user into the system and provides a token with a payload indicating the data of user
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user data
+        description: User data to create an account
+        required: true
+        schema:
+          $ref: '#/definitions/user_data'
+      responses:
+        200:
+          description: successful operation. Token signed
+          schema:
+            type: string
+            $ref: '#definitions/Token_res'
+        400:
+          description: Invalid input
+        404: 
+          description: User not found
+  /users/admin-update/:id:
+    put:
+      tags:
+      - users
+      summary: Update an existing user
+      description: Modify the data of a user. Only can be done by admis. It's used to change admin roles
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: ID of user
+        required: true
+        type: integer
+        format: int64
+      - in: body
+        name: body
+        description: User data
+        schema: 
+          $ref: '#/definitions/user'
+      responses:
+        200: 
+          description: successful operation
+            schema: 
+              type: array
+                items:
+                  $ref: '#/definitions/ok'
+        400:
+          description: Bad request. Missing arguments
+        404:
+          description: User not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+  /users/client-update:
+    put:
+      tags:
+      - users
+      summary: Update user data
+      description: Modify the data of client user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: User data
+        schema: 
+          $ref: '#/definitions/Update_user'
+      responses:
+        200: 
+          description: successful operation
+            schema: 
+              type: array
+                items:
+                  $ref: '#/definitions/ok'
+        400:
+          description: Bad request. Missing arguments
+        404:
+          description: User not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+  /users/admin-delete/:id:
+    delete:
+      tags:
+      - users
+      summary: Delete user
+      description: Delete user by id. Only can be done by admis
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: ID of user
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200
+          description: User removed
+        400:
+          description: Invalid data
+        404:
+          description: User not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+  /users/client-delete:
+    delete:
+      tags:
+      - users
+      summary: Delete account
+      description: Delete client account by itself
+      produces:
+      - application/json
+      responses:
+        200
+          description: User removed
+        400:
+          description: Invalid data
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+  /dishes:
+    get:
+        tags:
+        - Dishes
+        summary: Show list of dishes
+        description: All the users have access to the products list
+        produces:
+        - application/json
+        responses:
+          200:
+            description: successful operation
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/dish'
+          401: 
+            description: Client needs to sign in or sign up to be authenticated
+          404:
+            description: Not found
+        security:
+        - bearerAuth:
+          $ref: '#/securityDefinitions/bearerAuth' 
+    post:
+      tags:
+      - Dishes
+      summary: Create a new dish
+      description: Only admins are allowed to create a new product
+      parameters:
+      - name: New_dish
+        in: body
+        description: New dish data
+        required: true
+        schema:
+          $ref: '#/definitions/new_dish'
+      responses:
+        200:
+            description: successful operation
+            schema:
+              type: string
+              $ref: '#definitions/ok'
+        400:
+          description: Incomplete form
+        403: 
+          description: Forbidden. Only admins have access
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+    put:
+      tags:
+      - Dishes
+      summary: Update an existing dish
+      description: Admins can modify any dish
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: New dish object. At least it must have the description field (name of dish) in order to get the product that will be modified
+        required: true
+        schema:
+          $ref: '#/definitions/new_dish'
+      responses:
+        200: 
+          description: successful operation
+            schema: 
+              type: array
+                items:
+                  $ref: '#/definitions/ok'
+        400:
+          description: Bad request. Missing arguments
+        403: 
+          description: Forbidden. Only admins have access
+        404:
+          description: Dish not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+    delete:
+      tags:
+      - Dishes
+      summary: Delete dish
+      description: Administrators can delete the dishes
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Name of the dish in the "description" field
+        required: true
+        schema:
+          $ref: '#/definitions/Delete_dish'
+      responses:
+        200
+          description: successful operation
+            schema: 
+              type: array
+                items:
+                  $ref: '#/definitions/ok'
+        400:
+          description: Invalid data
+        403: 
+          description: Forbidden. Only admins have access
+        404:
+          description: Dish not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+  /orders:
+    get:
+        tags:
+        - Orders
+        summary: Show list of orders
+        description: Admins can see all the orders while clients only their own orders.\
+          \ Admins $ref => '#/definitions/orders_admin' && Clients $ref => '#/definitions/orders_client'
+        produces:
+        - application/json
+        responses:
+          200:
+            description: successful operation
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/orders_admin'
+                $ref: '#/definitions/orders_client'
+          400:
+            description: Missing arguments
+          401: 
+            description: Client has to sign in or sign up
+          403: 
+            description: Forbidden, only admins have access
+          404:
+            description: No orders found
+        security:
+        - bearerAuth:
+          $ref: '#/securityDefinitions/bearerAuth' 
+        - adminAuth:
+          $ref: '#/securityDefinitions/adminAuth'
+    post:
+      tags:
+      - Orders
+      summary: Create a new dish
+      description: Every user can create a new order
+      parameters:
+      - in: body
+        name: body
+        description: New order data. 
+        required: true
+        schema:
+          $ref: '#/definitions/new_order'
+      responses:
+        200:
+            description: successful operation
+            schema:
+              type: string
+              $ref: '#definitions/ok'
+        400:
+          description: Incomplete form
+        404: 
+          description: Dish not found. Order cannot be taken.
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+    put:
+      tags:
+      - Orders
+      summary: Update an existing order
+      description: Admins can modify the status of each order
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: The status of the order and orderID are required to search for that specific order and update the status
+        required: true
+        schema:
+          $ref: '#/definitions/modify_dish'
+      responses:
+        200: 
+          description: successful operation
+            schema: 
+              type: array
+                items:
+                  $ref: '#/definitions/ok'
+        400:
+          description: Bad request. Missing arguments
+        403: 
+          description: Forbidden. Only admins have access
+        404:
+          description: Order not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+    delete:
+      tags:
+      - Orders
+      summary: Delete order
+      description: Administrators can delete the order
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Order ID that will be removed
+        required: true
+        schema:
+          $ref: '#/definitions/Delete_dish'
+      responses:
+        200
+          description: successful operation
+            schema: 
+              type: array
+                items:
+                  $ref: '#/definitions/ok'
+        400:
+          description: Invalid request
+        403: 
+          description: Forbidden. Only admins have access
+        404:
+          description: Order not found
+      security:
+      - bearerAuth:
+        $ref: '#/securityDefinitions/bearerAuth' 
+      - adminAuth:
+        $ref: '#/securityDefinitions/adminAuth'
+securityDefinitions:
+  bearerAuth:
+    name: JsonWebToken
+    type: Token 
+    format: JWT
+    in: header
+    description: It's for authenticaiton and must have the word "Bearer " (string) plus the JWT token (string)
+  adminAuth:
+    type: oauth2
+    description: Authorization
+    authorizationUrl: /users/login
+    flow: implicit
+    scopes:
+      write:dishes: modify dishes (products)
+      write:orders: modify order
+      write:users: modify users
+definitions:
+  Token_res: 
+    type: object
+    properties:
+      message: 
+        type: string
+      token: 
+        type: string
+  OK: 
+    type: object
+    properties:
+      message: 
+        type: string
+  New_user:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int
+      name:
+        type: string
+        format: varchar255
+      password:
+        type: string
+        format: varchar255
+      direction:
+        type: string
+        format: varchar255
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+        format: varchar255
+      email:
+        type: string
+        format: varchar255
+      password:
+        type: string
+        format: varchar255
+      direction:
+        type: string
+        format: varchar255
+      admin:
+        type: integer
+        format: tinyint
+        default: 0
+        description: Shows the role of user. Admin == 1, customer == 0
+  Welcome_user:
+    type: object
+    properties:
+      Message:
+        type: string
+  User_data:
+    type: object
+    properties:
+      email:
+        type: string
+        format: varchar255
+      password:
+        type: string
+        format: varchar255
+  User_email: 
+    type: object
+    properties: 
+      email: 
+        type: string
+        format: varchar255
+  Update_user:
+    type: object
+    properties:
+      name:
+        type: string
+        format: varchar255
+      email:
+        type: string
+        format: varchar255
+      password:
+        type: string
+        format: varchar255
+      direction:
+        type: string
+        format: varchar255
+  Dish:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int
+      description:
+        type: string
+        format: varchar255
+      image:
+        type: string
+        format: text
+      price:
+        type: integer
+        format: int
+  New_dish:
+    type: object
+    properties:
+      description:
+        type: string
+        format: varchar255
+      image:
+        type: string
+        format: text
+      price:
+        type: number
+        format: int64
+  Delete_dish: 
+    type: object
+    propereties:
+      description: 
+        type: string
+        format: varchar255
+  Orders_client:
+    type: object
+    properties: 
+      id: 
+        type: integer
+        format: int
+      status:
+        type: string
+        format: varchar255
+        enum:
+        - New
+        - Confirmed
+        - Preparing
+        - Delivering
+        - Cancelled
+        - Delivered
+      date: 
+        type: string
+        format: datetime
+      description: 
+        type: string
+        format: varchar255
+      image:
+        type: string
+        format: text
+      price:
+        type: integer
+        format: int
+      payment: 
+        type: string
+        format: varchar255
+      name:
+        type: string
+        format: varchar255
+      direction: 
+        type: string
+        format: varchar255
+  Orders_admin:
+    type: object
+    properties: 
+      id: 
+        type: integer
+        format: int
+      status:
+        type: string
+        format: varchar255
+        enum:
+        - New
+        - Confirmed
+        - Preparing
+        - Delivering
+        - Cancelled
+        - Delivered
+      date: 
+        type: string
+        format: datetime
+      description: 
+        type: string
+        format: varchar255
+      image:
+        type: string
+        format: text
+      price:
+        type: integer
+        format: int
+      payment: 
+        type: string
+        format: varchar255
+      name:
+        type: string
+        format: varchar255
+      direction: 
+        type: string
+        format: varchar255
+      admin: 
+        type: integer
+        format: tinyint
+        description: 1 => admin && 0 => client
+        enum:
+        - 1
+        - 0
+  New_order: 
+    type: object
+    properties:
+      description: 
+        type: object
+        format: varchar255
+        example: ["Burger", "Tostadas"]
+      payment:
+        type: string
+        format: varchar255
+  Modify_dish:
+    type: object
+    properties: 
+      new_status: 
+        type: string
+        format: varchar255
+      orderID:
+        type: integer
+        format: int64
+  Delete_dish:
+    type: object
+    properties: 
+      orderID:
+        type: integer
+        format: int64
+externalDocs:
+  description: Find out more about Delilah
+  url: https://github.com/DaveSV100/delilah-resto.git
+  # For more information => castellanos.johann@gmail.com
